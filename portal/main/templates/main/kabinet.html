@@ -1,0 +1,59 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+
+{% if slides %}
+<div class="slider">
+    {% for slide in slides %}
+    <div class="slajd {% if forloop.first %}aktivnyy{% endif %}">
+        <img src="{{ slide.image.url }}" alt="{{ slide.title }}" class="slider-image">
+        <div class="slider-text">
+            <h2>{{ slide.title }}</h2>
+            {% if slide.subtitle %}
+                <p>{{ slide.subtitle }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="slider-tochki">
+        {% for slide in slides %}
+        <span class="tochka {% if forloop.first %}aktivnaya{% endif %}"></span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<h1 class="page-title">Личный кабинет</h1>
+
+<p><strong>{{ user.get_full_name|default:user.username }}</strong> &nbsp;|&nbsp; {{ user.email }}</p>
+<br>
+<a href="{% url 'zayavka_new' %}"><button class="knopka">+ Новая заявка</button></a>
+<br><br>
+
+<h2 style="margin-bottom:14px; color:#1c2b3a;">Мои заявки</h2>
+
+{% if zayavki %}
+<div class="zayavki-spisok">
+    {% for z in zayavki %}
+    <div class="zayavka-item">
+        <div>
+            <strong>{{ z.transport }}</strong>
+            <div class="zayavka-info">Дата начала: {{ z.data_nachala }} &nbsp;|&nbsp; Оплата: {{ z.oplata }}</div>
+            {% if z.status == 'zavershena' and not z.otzyv %}
+                <div style="margin-top:8px;">
+                    <a href="{% url 'otzyv' z.pk %}"><button class="knopka knopka-seryy" style="padding:6px 16px;font-size:13px;">Оставить отзыв</button></a>
+                </div>
+            {% elif z.otzyv %}
+                <div class="zayavka-info" style="margin-top:6px;font-style:italic;">Отзыв: {{ z.otzyv }}</div>
+            {% endif %}
+        </div>
+        <span class="status status-{{ z.status }}">{{ z.get_status_display }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p style="color:#888;">У вас пока нет заявок.</p>
+{% endif %}
+
+{% endblock %}

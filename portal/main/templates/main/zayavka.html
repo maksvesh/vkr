@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+{% block title %}Подать заявку{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Оформление заявки</h1>
+
+<div class="forma">
+    <form method="post">
+        {% csrf_token %}
+        <div class="pole">
+            <label for="id_urok">Вид транспорта</label>
+            <select name="urok" id="id_urok" required>
+                <option value="">— выберите —</option>
+                <option value="Катер">Катер</option>
+                <option value="Яхта">Яхта</option>
+                <option value="Круизный лайнер">Круизный лайнер</option>
+            </select>
+        </div>
+        <div class="pole">
+            <label for="id_data_nachala">Дата начала обучения (ДД.ММ.ГГГГ)</label>
+            <input type="text" name="data_nachala" id="id_data_nachala"
+                   placeholder="01.09.2026" pattern="\d{2}\.\d{2}\.\d{4}" required>
+        </div>
+        <div class="pole">
+            <label for="id_oplata">Способ оплаты</label>
+            <select name="oplata" id="id_oplata" required>
+                <option value="">— выберите —</option>
+                <option value="Наличные">Наличные</option>
+                <option value="Карта">Карта</option>
+                <option value="Перевод">Банковский перевод</option>
+            </select>
+        </div>
+        {% if error %}
+            <div class="oshibka">{{ error }}</div>
+        {% endif %}
+        <button type="submit" class="knopka">Отправить заявку</button>
+    </form>
+    <p class="podpiska"><a href="{% url 'kabinet' %}">← Назад в кабинет</a></p>
+</div>
+
+{% endblock %}
