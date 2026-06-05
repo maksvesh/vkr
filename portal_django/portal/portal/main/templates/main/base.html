@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Портал{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <a href="{% url 'home' %}" class="logo">Водить.РФ</a>
+        <nav class="nav">
+            {% if user.is_authenticated %}
+                <a href="{% url 'kabinet' %}">Кабинет</a>
+                <a href="{% url 'zayavka_new' %}">Подать заявку</a>
+                <a href="{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a href="{% url 'home' %}">Войти</a>
+                <a href="{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main class="page">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    © 2026 Водить.РФ — обучение вождению речного транспорта
+</footer>
+
+<script>
+// Простой слайдер
+function initSlider() {
+    var slajdy = document.querySelectorAll('.slajd');
+    var tochki = document.querySelectorAll('.tochka');
+    if (!slajdy.length) return;
+    var tekuschy = 0;
+    function pokazat(n) {
+        slajdy[tekuschy].classList.remove('aktivnyy');
+        tochki[tekuschy].classList.remove('aktivnaya');
+        tekuschy = n % slajdy.length;
+        slajdy[tekuschy].classList.add('aktivnyy');
+        tochki[tekuschy].classList.add('aktivnaya');
+    }
+    tochki.forEach(function(t, i) { t.onclick = function() { pokazat(i); }; });
+    setInterval(function() { pokazat(tekuschy + 1); }, 3000);
+}
+document.addEventListener('DOMContentLoaded', initSlider);
+</script>
+
+</body>
+</html>
